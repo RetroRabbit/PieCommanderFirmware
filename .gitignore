@@ -1,0 +1,10 @@
+# source control
+.git/
+.hg/
+.svn/
+
+# generated files
+*.o
+
+# git excludes
+*.orig
