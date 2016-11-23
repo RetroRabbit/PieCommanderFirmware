@@ -1,4 +1,4 @@
-[]() Overview {#overview .western style="margin-top: 0cm"}
+[]() Overview 
 =============
 
 This document defines how a controller will communicate with the Robot.
@@ -7,7 +7,7 @@ parameters that can be sent for each parameter. It also defines the
 message format which includes a standard header which programmers must
 use to interpret the command being sent and the payloads.
 
-\
+
 
 This document assumes that the controller will be connected to the robot
 over a bidirectional bluetooth serial link. The controller will transmit
@@ -15,18 +15,16 @@ a stream of messages and then wait for a configurable amount of time for
 any response from the robot before continuing with its next stream of
 commands.
 
-\
 
 Commands are broken into four major categories:
 
 -   -   -   -   
 
-\
 
 The sections below will first introduce the Message Format to be used
 and then it will explain each command category in more detail.
 
-[]() Message Format {#message-format .western style="margin-top: 0cm"}
+[]() Message Format 
 ===================
 
 All messages will consist of a Fixed Message Header followed by an
@@ -35,16 +33,14 @@ Byte stream in big-endian order: higher order bytes precede lower order
 bytes. A 16-bit word is presented on the wire as Most Significant Byte
 (MSB), followed by Least Significant Byte (LSB).
 
-\
 
 Each command will have an absolute maximum length of 1KB, including
 header and payload. The command header will always be 8 bytes (4 words)
 followed by the variable length payload which differs in length based on
 the command type being executed.
 
-\
 
-[]() Command Header {#command-header .western align="justify" style="margin-top: 0cm"}
+[]() Command Header 
 -------------------
 
 Byte 1: Command Index
@@ -56,7 +52,6 @@ automatically reset and start at 0 again once the maximum value has been
 reached. The command index will be used in events, notifications and
 error handling to indicate last successfully executed command.
 
-\
 
 Byte 2: Command Behaviour
 
@@ -64,14 +59,12 @@ The command behaviour byte consists of a set of flags which will control
 how the command is executed. The behaviour flags are listed and
 explained below:
 
-\
 
   ------- ---------- ------- ------- ---------- ---------- ---------- ----------
   **0**   **1**      **2**   **3**   **4**      **5**      **6**      **7**
   Sync    Required   Echo    Debug   Download   Reserved   Reserved   Reserved
   ------- ---------- ------- ------- ---------- ---------- ---------- ----------
 
-\
 
 Flag 0: The Sync flag indicates whether a command is executed
 synchronously or asynchronously. When the flag is set to 0 (default),
@@ -80,7 +73,6 @@ flag is set to 1, the robot will execute the command in a blocking
 fashion meaning it will respond with an acknowledgement back to the
 controller when the command has been executed successfully.
 
-\
 
 Flag 1: The Required flag indicates whether the command will raise an
 error message if it was not executed successfully. When set to 0
@@ -88,27 +80,22 @@ error message if it was not executed successfully. When set to 0
 not executed successfully. When set to 1, the robot will raise an error
 notification if the command was not executed successfully.
 
-\
 
 Flag 2: The echo flag indicates whether the command should be echoed
 back to the controller once execution has been completed.
 
-\
 
 Flag 3: The debug flag indicates whether the command should be executed
 in debug mode.
 
-\
 
 Flag 4: The download flag indicates that this command should not be
 executed but its payload should be saved into the downloads buffer on
 the robot.
 
-\
 
 Flag 5-7: These flags are reserved for future use.
 
-\
 
 Byte 3-4: Command Length
 
@@ -117,13 +104,11 @@ including the header and payload. The command length can be used to
 ensure that all the bytes have been received before starting to process
 a command. The maximum value of command length is 1024.
 
-\
 
 Byte 5-7: Reserved
 
 Bytes 5, 6 and 7 are reserved for future use.
 
-\
 
 Byte 8: Command Type
 
@@ -131,7 +116,7 @@ Byte 8 represents a UTF-8 encoded ASCII character which indicates the
 command that has to be executed. The list of available commands are
 described below.
 
-[]() Command Payload {#command-payload .western align="justify" style="margin-top: 0cm"}
+[]() Command Payload 
 --------------------
 
 Byte 9 - 20(max)
@@ -139,7 +124,6 @@ Byte 9 - 20(max)
 The command payload is a variable length payload which consists of all
 the parameters for each command.
 
-\
 
 []() Movement Commands {#movement-commands .western align="justify" style="margin-top: 0cm"}
 ======================
@@ -151,14 +135,13 @@ movement commands include the following:
 
 -   -   -   -   -   -   -   -   
 
-\
 
 The commands are described in more detail below:
 
-[]() Move {#move .western align="justify" style="margin-top: 0cm"}
+[]() Move 
 ---------
 
-### []() Command Type {#command-type .western align="justify" style="margin-top: 0cm"}
+### []() Command Type 
 
 Character code: M
 
@@ -172,9 +155,8 @@ the specified amount of time is 0 then the robot will move forward at
 the specified speed until another move command (forward, back, Stop) has
 been received.
 
-### []() Parameters {#parameters .western align="justify" style="margin-top: 0cm"}
+### []() Parameters 
 
-\
 
   ---------------- ------------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------
   Name             Length        Description                                                                                                                                                                                                                                                         Required
@@ -196,11 +178,8 @@ been received.
                                                                                                                                                                                                                                                                                                      
   ---------------- ------------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------
 
-\
 
-\
 
-\
 
   --- --- --- ---
   \   \   \   \
@@ -213,9 +192,8 @@ been received.
               
   --- --- --- ---
 
-\
 
-[]() Stop {#stop .western align="justify" style="margin-top: 0cm"}
+[]() Stop 
 ---------
 
 ### []() Command Type {#command-type-1 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
@@ -235,9 +213,8 @@ Binary value: 0101 0011
 
 None
 
-\
 
-[]() Shiver {#shiver .western align="justify" style="margin-top: 0cm"}
+[]() Shiver 
 -----------
 
 ### []() Command Type {#command-type-2 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
@@ -246,18 +223,15 @@ Character code: ????
 
 Binary value: 0011 1111
 
-\
 
 ### []() Behaviour {#behaviour-2 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 When receiving the Shiver command the robot will shake like it is
 afraid.
 
-\
 
 ### []() Parameters {#parameters-2 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ----------- ------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**    **Length**   **Description**                                                                                                                                                                                                                  **Required**
@@ -274,29 +248,25 @@ afraid.
   Delay       2 Bytes      This parameter specifies the number of milliseconds of the delay between repeating a shiver. The value has a range from 0 - 65 535. This parameter is only required if the shiver is being repeated more than once               No
   ----------- ------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
-[]() Mate {#mate .western align="justify" style="margin-top: 0cm"}
+[]() Mate 
 ---------
 
-### []() Command Type {#command-type-3 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
+### []() Command Type 
 
 Character code: XXX
 
 Binary value: 0100 1101
 
-\
 
 ### []() Behaviour {#behaviour-3 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 When receiving the Mate command the robot will execute the mating
 ritual.
 
-\
 
 ### []() Parameters {#parameters-3 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ---------- ------------ --------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**   **Length**   **Description**                                                                                                             **Required**
@@ -307,7 +277,6 @@ ritual.
   DeviceID   1 Byte       This parameter specifies the ID of the robot for which the mating ritual is performed. The value has a range from 0 - 255   Yes
   ---------- ------------ --------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Greet {#greet .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 ----------
@@ -318,18 +287,15 @@ Character code: XXX
 
 Binary value: 0100 1101
 
-\
 
 ### []() Behaviour {#behaviour-4 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 When receiving the Greet command the robot will execute the greeting
 ritual.
 
-\
 
 ### []() Parameters {#parameters-4 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ---------- ------------ --------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**   **Length**   **Description**                                                                                                             **Required**
@@ -340,9 +306,7 @@ ritual.
   DeviceID   1 Byte       This parameter specifies the ID of the robot for which the mating ritual is performed. The value has a range from 0 - 255   Yes
   ---------- ------------ --------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
-\
 
 []() Waggle {#waggle .western align="justify" style="margin-top: 0cm"}
 -----------
@@ -353,17 +317,14 @@ Character code: W
 
 Binary value: 0101 0111
 
-\
 
 ### []() Behaviour {#behaviour-5 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 When receiving the Waggle command the robot will execute a waggle.
 
-\
 
 ### []() Parameters {#parameters-5 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ----------- ------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**    **Length**   **Description**                                                                                                                                                                                                                  **Required**
@@ -393,18 +354,15 @@ Character code: ??
 
 Binary value: 0101 0111
 
-\
 
 ### []() Behaviour {#behaviour-6 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 When the robot was hit he must look sad, reverse rapidly for 5 cm, and
 then shiver while making obscene noises and flashing eye LEDs...
 
-\
 
 ### []() Parameters {#parameters-6 .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ----------- ------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**    **Length**   **Description**                                                                                                                                                                                                                  **Required**
@@ -435,11 +393,9 @@ the following:
 
 -   -   -   -   -   
 
-\
 
 These commands are described in more detail below:
 
-\
 
 []() Eye Pattern {#eye-pattern .western align="justify" style="margin-top: 0cm"}
 ----------------
@@ -456,7 +412,6 @@ Binary value: <span style="background: #f1f1f1">0100 0101</span>
 
 ### []() Parameters {#parameters-7 .western style="margin-top: 0cm"}
 
-\
 
   ----------------- ------------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**          **Length**   **Description**                                                                                                                                                                     **Required**
@@ -471,9 +426,7 @@ Binary value: <span style="background: #f1f1f1">0100 0101</span>
                                  See “Eye Expression Description” section at end of document for additional detail.                                                                                                  
   ----------------- ------------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
-\
 
 []() Toggle {#toggle .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 -----------
@@ -490,7 +443,6 @@ Binary value: 0101 0100
 
 ### []() Parameters {#parameters-8 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   -------------- ------------ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------
   **Name**       **Length**   **Description**                                                                                                                                                                                                                            **Required**
@@ -541,7 +493,6 @@ Binary value: 0101 0100
   Off Time       2 Bytes      This parameter specifies the number of milliseconds that the device will be in the Off state if the command state is Flash. The value has a range from 0 - 65 535. Practical values range from 10ms to 3000ms.                             Yes for Flash
   -------------- ------------ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------
 
-\
 
 []() Play {#play .western style="margin-top: 0cm"}
 ---------
@@ -558,7 +509,6 @@ Binary value: 0101 0000
 
 ### []() Parameters {#parameters-9 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ---------- ------------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**   **Length**   **Description**                                                                                                                                                                                                         **Required**
@@ -585,7 +535,6 @@ Binary value: 0101 0000
   Delay      2 Bytes      This parameter specifies the number of milliseconds of the delay between repeating a sound. The value has a range from 0 - 65 535. This parameter is only required if the sound is being repeated more than once        No
   ---------- ------------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Interact {#interact .western style="margin-top: 0cm"}
 -------------
@@ -602,7 +551,6 @@ Binary value: 0100 1001
 
 ### []() Parameters {#parameters-10 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ------------------ ------------ --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**           **Length**   **Description**                                                                                                                                                                                           **Required**
@@ -625,7 +573,6 @@ Binary value: 0100 1001
   DestinationID      4 Byte       The DestinationID is an unsigned short that represents the ID of the robot for which the message is intended. If the Destination ID is 0, the message is a broadcast to all the robots in the vicinity.   Yes
   ------------------ ------------ --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Shoot {#shoot .western align="justify" style="margin-top: 0cm"}
 ----------
@@ -642,7 +589,6 @@ Binary value: 0101 1000
 
 ### []() Parameters {#parameters-11 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ----------- ------------ ---------------------------------------------------------------------------------------------------- --------------
   **Name**    **Length**   **Description**                                                                                      **Required**
@@ -655,7 +601,6 @@ Binary value: 0101 1000
   Target ID   4 Byte       The ID of the target robot /Team/Guild being fired at                                                Yes
   ----------- ------------ ---------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Scan {#scan .western align="justify" style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 ---------
@@ -678,7 +623,6 @@ robot).
 
 ### []() Parameters {#parameters-12 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   -------------- ------------ -------------------------------------------------------------------------------------------------------- --------------
   **Name**       **Length**   **Description**                                                                                          **Required**
@@ -691,7 +635,6 @@ robot).
   Target ID      4 Byte       The ID of the target robot /Team/Guild scan                                                              Yes
   -------------- ------------ -------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Notifications {#notifications .western align="justify" style="margin-top: 0cm"}
 ==================
@@ -713,7 +656,6 @@ Binary value: 0100 1111
 
 ### []() Parameters {#parameters-13 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ------------- ------------ ------------------------------------------------------------------------------------------------------------------------------------------------------ --------------
   **Name**      **Length**   **Description**                                                                                                                                        **Required**
@@ -731,7 +673,6 @@ Binary value: 0100 1111
   Obstacle ID   1 Byte       The Device ID of the obstacle that was detected, if known. As an example if the robot detected another robot, he can pass the ID to the smart phone.   No
   ------------- ------------ ------------------------------------------------------------------------------------------------------------------------------------------------------ --------------
 
-\
 
 []() Interaction Receive {#interaction-receive .western align="justify" style="margin-top: 0cm"}
 ------------------------
@@ -748,7 +689,6 @@ Binary value: <span style="background: #f1f1f1">0110 1001</span>
 
 ### []() Parameters {#parameters-14 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   ------------------- ------------ --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**            **Length**   **Description**                                                                                                                                                                                                                         **Required**
@@ -771,7 +711,6 @@ Binary value: <span style="background: #f1f1f1">0110 1001</span>
   ~~DestinationID~~   ~~4 Byte~~   ~~The DestinationID is an unsigned short that represents the ID of the robot for which the message is intended. If the Destination ID is 0, the message is a broadcast to all the robots in the vicinity. Either a team/guild/robot~~   ~~Yes~~
   ------------------- ------------ --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Error {#error .western align="justify" style="margin-top: 0cm"}
 ----------
@@ -788,7 +727,6 @@ Binary value: <span style="background: #f1f1f1">0020 0001</span>
 
 ### []() Parameters {#parameters-15 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   --------------- ------------ ------------------------------------------------------------------------------------------------- --------------
   **Name**        **Length**   **Description**                                                                                   **Required**
@@ -801,7 +739,6 @@ Binary value: <span style="background: #f1f1f1">0020 0001</span>
   Command Index   1 Byte       The command index indicates the command that the robot was busy executing when the error arose.   Yes
   --------------- ------------ ------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Status Notification {#status-notification .western align="justify" style="margin-top: 0cm"}
 ------------------------
@@ -826,14 +763,12 @@ Binary value: <span style="background: #f1f1f1">0111 0011</span>
  {#section-4 .western align="justify" style="margin-top: 0cm; line-height: 100%; page-break-inside: auto; page-break-after: auto"}
 -----
 
-\
 
 ### []()\
  {#section-5 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
 ### []() Parameters {#parameters-16 .western style="line-height: 100%; page-break-inside: avoid; page-break-after: avoid"}
 
-\
 
   -------------- ------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
   **Name**       **Length**   **Description**                                                                                                                                            **Required**
@@ -844,7 +779,6 @@ Binary value: <span style="background: #f1f1f1">0111 0011</span>
   Status Array   Max Bytes    The status array will consist of a list of StatusIDs (1 Byte) followed by a status value (2 Bytes) that will enumerate all the statii known by the robot   Yes
   -------------- ------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
 
-\
 
 []() Administrative Commands {#administrative-commands .western align="justify" style="margin-top: 0cm"}
 ============================
@@ -864,25 +798,20 @@ Reset
 **SECTION TWO - Communication between Main Controller and IR
 Controller**
 
-\
 
 (Text defined 14 April 2016)
 
-\
 
 The interface is based on memory registers written to / read by the Main
 Controller as well as the the IR Controller.
 
-\
 
 The interface is based on I2C communication between the 2 circuit boards
 and is byte oriented. The I2C device address is 0x4F. Thus for a write
 operation, the value of 0x9E will be on the bus - for a read operation,
 the value of 0x9F will be on the bus.
 
-\
 
-\
 
   -------- ----------------------- --------------------------------------------- -----------
   Offset   Item                    Description                                   Operation
@@ -953,7 +882,6 @@ the value of 0x9F will be on the bus.
                                                                                  MCW
   -------- ----------------------- --------------------------------------------- -----------
 
-\
 
 MCW Main Controller Write
 
@@ -961,12 +889,10 @@ MCR Main Controller Read
 
 IRCW IR Controller Write
 
-\
 
 An MCW operation at STATUS0 will result in a time-slot synchronisation
 operation of the IR subsystem.
 
-\
 
 STATUS0
 
@@ -986,20 +912,16 @@ Bit6 spare1.
 
 Bit7 spare2.
 
-\
 
 **EYE EXPRESSION DESCRIPTION**
 
-\
 
 Each eye consists of 6 rows of 6 LEDs. The upper and lower rows only
 have 4 LEDs.
 
-\
 
 The LEDs are only present in the bit positions high-lighted below.
 
-\
 
 Bit6 and Bit7 of Row1 also indicate which eye is required to draw the
 pattern.
@@ -1008,14 +930,11 @@ Bit6 = 1: pattern is drawn on left eye
 
 Bit7 = 1: pattern is drawn on right eye
 
-\
 
 If same pattern is to be drawn on both eyes, then bits 6 and 7 are set
 simultaneously.
 
-\
 
-\
 
   ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- --- -------
   bit5                                            <span style="background: #e06666">bit4</span>   <span style="background: #e06666">bit3</span>   <span style="background: #e06666">bit2</span>   <span style="background: #e06666">bit1</span>   bit0                                            \   Row 1
@@ -1037,13 +956,10 @@ simultaneously.
                                                                                                                                                                                                                                                                                                       
   ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- ----------------------------------------------- --- -------
 
-\
 
-\
 
 **I2C Write Protocol**
 
-\
 
 The following byte sequence is defined for a write operation:
 
@@ -1057,11 +973,9 @@ Byte3: first data byte to be written.
 
 ByteN: nth data byte to be written
 
-\
 
 **I2C Read Protocol**
 
-\
 
 The following byte sequence is defined for a read operation:
 
@@ -1074,32 +988,25 @@ Byte2: first data byte to be read at offset position
 ByteN: subsequent bytes from next registers. Offset pointer increments
 with ever read
 
-\
 
-\
 
-\
 
 **SECTION THREE - Notes on the Operation of the IR Subsystem**
 
-\
 
 (Text defined 28 May 2016)
 
-\
 
 The nature of the IR subsystem is that one robot will transmit an IR
 packet at a time, while all the others will be potentially receiving a
 transmission from another robot. A robot will also receive its own
 transmission, which can be used for obstacle detection.
 
-\
 
 The data that is transmitted via the IR transmitters will include each
 robot’s ID information, so that a robot can determine if 1 or 2 robots
 are in front of it.
 
-\
 
 The timing is based on the allocation a 50ms time-slot to each robot. It
 is assumed that there is a synchronization mechanism by the Main
@@ -1107,12 +1014,10 @@ Controller to keep the 50ms time-slots on each of the robots fairly
 closely aligned, to ultimately prevent flooding of IR signals, which
 will make detection of useful IR information impossible.
 
-\
 
 Currently 6 time-slots are defined (0-5), for the scenario of 6 robots
 in play.
 
-\
 
 Future considerations will use the Robot ID number to determine which
 timeslot the IR message / signature will be transmitted. However, for
@@ -1130,19 +1035,14 @@ the first iteration, the following messages / IDs will be used:
 
 0xAA, 0xCC, 0x78, 0x1E, 0x00
 
-\
 
 The 0x00 at the end of the sequence is to facilitate string operations
 in the firmware, but only the first 4 bytes of the string are
 transmitted.
 
-\
 
 Byte 0 & 1 are sync bytes. Byte 2 is Robot ID, Byte 3 is the CRC which
 is made up of the sum of first 3 bytes and then &gt;&gt; 4.
 
-\
 
-\
 
-\
